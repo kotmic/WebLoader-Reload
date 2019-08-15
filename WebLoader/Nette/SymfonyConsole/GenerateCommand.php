@@ -4,27 +4,30 @@ declare(strict_types = 1);
 
 namespace WebLoader\Nette\SymfonyConsole;
 
-use Nette;
+use Nette\DI\Container;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use WebLoader;
+use WebLoader\Compiler;
+use WebLoader\File;
 
 /**
  * Generate Command
  */
-class GenerateCommand extends \Symfony\Component\Console\Command\Command
+class GenerateCommand extends Command
 {
 
-	/** @var \WebLoader\Compiler[] */
+	/** @var Compiler[] */
 	private $compilers = [];
 
 
-	public function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		parent::__construct();
 
-		$compilers = $container->findByType(WebLoader\Compiler::class);
+		$compilers = $container->findByType(Compiler::class);
 		foreach ($compilers as $compilerName) {
 			$this->compilers[$compilerName] = $container->getService($compilerName);
 		}
@@ -46,8 +49,10 @@ class GenerateCommand extends \Symfony\Component\Console\Command\Command
 		$nofiles = true;
 		foreach ($this->compilers as $compiler) {
 			$files = $compiler->generate(!$force);
+
+			/** @var File $file */
 			foreach ($files as $file) {
-				$output->writeln($file->file);
+				$output->writeln($file->getFile());
 				$nofiles = false;
 			}
 		}
