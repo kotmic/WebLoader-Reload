@@ -9,6 +9,7 @@ use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Config\Helpers;
 use Nette\DI\ContainerBuilder;
+use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Finder;
 use SplFileInfo;
 use WebLoader\FileNotFoundException;
@@ -171,7 +172,7 @@ class Extension extends CompilerExtension
 	}
 
 
-	public function afterCompile(Nette\PhpGenerator\ClassType $class): void
+	public function afterCompile(ClassType $class): void
 	{
 		$meta = $class->getProperty('meta');
 		if (array_key_exists('webloader\\nette\\loaderfactory', $meta->value['types'])) {
