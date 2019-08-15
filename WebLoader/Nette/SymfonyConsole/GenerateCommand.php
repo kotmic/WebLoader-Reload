@@ -42,13 +42,19 @@ class GenerateCommand extends Command
 	}
 
 
-	protected function execute(InputInterface $input, OutputInterface $output): void
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return int|void|null
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$force = $input->getOption('force');
+		// $force = $input->getOption('force');
 
 		$nofiles = true;
 		foreach ($this->compilers as $compiler) {
-			$files = $compiler->generate(!$force);
+			// $files = $compiler->generate(!$force);
+			$files = $compiler->generate();
 
 			/** @var File $file */
 			foreach ($files as $file) {

@@ -31,6 +31,7 @@ abstract class WebLoader extends Control
 
 	public function __construct(Compiler $compiler, string $tempPath, bool $appendLastModified)
 	{
+		parent::__construct();
 		$this->compiler = $compiler;
 		$this->tempPath = $tempPath;
 		$this->appendLastModified = $appendLastModified;
