@@ -24,10 +24,10 @@ class Compiler
 	/** @var array */
 	private $fileFilters = [];
 
-	/** @var \WebLoader\IFileCollection */
+	/** @var IFileCollection */
 	private $collection;
 
-	/** @var \WebLoader\IOutputNamingConvention */
+	/** @var IOutputNamingConvention */
 	private $namingConvention;
 
 	/** @var bool */
@@ -42,7 +42,7 @@ class Compiler
 	/** @var bool */
 	private $defer = false;
 
-	/** @var string */
+	/** @var string|null */
 	private $nonce;
 
 	/** @var bool */
@@ -83,7 +83,7 @@ class Compiler
 
 	public function getNonce(): ?string
 	{
-		return $this->nonce;
+		return $this->nonce ?? $this->getGlobalNonce();
 	}
 
 
@@ -93,28 +93,22 @@ class Compiler
 	}
 
 
-	/**
-	 * Get temp path
-	 */
 	public function getOutputDir(): string
 	{
 		return $this->outputDir;
 	}
 
 
-	/**
-	 * Set temp path
-	 */
 	public function setOutputDir(string $tempPath): void
 	{
 		$tempPath = Path::normalize($tempPath);
 
 		if (!is_dir($tempPath)) {
-			throw new \WebLoader\FileNotFoundException("Temp path '$tempPath' does not exist.");
+			throw new FileNotFoundException("Temp path '$tempPath' does not exist.");
 		}
 
 		if (!is_writable($tempPath)) {
-			throw new \WebLoader\InvalidArgumentException("Directory '$tempPath' is not writeable.");
+			throw new InvalidArgumentException("Directory '$tempPath' is not writeable.");
 		}
 
 		$this->outputDir = $tempPath;
@@ -199,10 +193,10 @@ class Compiler
 		$modified = 0;
 
 		foreach ($files as $file) {
-			$modified = max($modified, filemtime(realpath($file)));
+			$modified = max($modified, filemtime((string) realpath($file)));
 		}
 
-		return $modified;
+		return (int) $modified;
 	}
 
 
@@ -272,15 +266,10 @@ class Compiler
 			file_put_contents($outPath, $this->getContent($files));
 		}
 
-		return new File($name, filemtime($path), $files);
+		return new File($name, (int) filemtime($path), $files);
 	}
 
 
-	/**
-	 * Load file
-	 *
-	 * @param string $file path
-	 */
 	protected function loadFile(string $file): string
 	{
 		$content = file_get_contents($file);
@@ -338,5 +327,14 @@ class Compiler
 	public function getFileFilters(): array
 	{
 		return $this->fileFilters;
+	}
+
+
+	/** Copy from \Tracy\Helpers::getNonce() */
+	private function getGlobalNonce(): ?string
+	{
+		return preg_match('#^Content-Security-Policy(?:-Report-Only)?:.*\sscript-src\s+(?:[^;]+\s)?\'nonce-([\w+/]+=*)\'#mi', implode("\n", headers_list()), $m)
+			? $m[1]
+			: null;
 	}
 }

@@ -4,17 +4,19 @@ declare(strict_types = 1);
 
 namespace WebLoader\Nette;
 
-use Nette;
 use Nette\Configurator;
 use Nette\DI\Compiler;
+use Nette\DI\CompilerExtension;
 use Nette\DI\Config\Helpers;
 use Nette\DI\ContainerBuilder;
 use Nette\Utils\Finder;
+use SplFileInfo;
+use WebLoader\FileNotFoundException;
 
 /**
  * @author Jan Marek
  */
-class Extension extends \Nette\DI\CompilerExtension
+class Extension extends CompilerExtension
 {
 	public const DEFAULT_TEMP_PATH = 'webtemp';
 	public const EXTENSION_NAME = 'webloader';
@@ -89,12 +91,13 @@ class Extension extends \Nette\DI\CompilerExtension
 
 		foreach (['css', 'js'] as $type) {
 			foreach ($config[$type] as $name => $wlConfig) {
+				/** @var array $wlConfig */
 				$wlConfig = Helpers::merge($wlConfig, $config[$type . 'Defaults']);
 				$this->addWebLoader($builder, $type . ucfirst($name), $wlConfig);
 				$loaderFactoryTempPaths[strtolower($name)] = $wlConfig['tempPath'];
 
 				if (!is_dir($wlConfig['tempDir']) || !is_writable($wlConfig['tempDir'])) {
-					throw new \WebLoader\Nette\CompilationException(sprintf("You must create a writable directory '%s'", $wlConfig['tempDir']));
+					throw new CompilationException(sprintf("You must create a writable directory '%s'", $wlConfig['tempDir']));
 				}
 			}
 		}
@@ -196,6 +199,7 @@ class Extension extends \Nette\DI\CompilerExtension
 	{
 		$normalizedFiles = [];
 
+		/** @var array|string $file */
 		foreach ($filesConfig as $file) {
 			// finder support
 			if (is_array($file) && isset($file['files']) && (isset($file['in']) || isset($file['from']))) {
@@ -213,19 +217,22 @@ class Extension extends \Nette\DI\CompilerExtension
 
 				$foundFilesList = [];
 				foreach ($finder as $foundFile) {
-					/** @var \SplFileInfo $foundFile */
+					/** @var SplFileInfo $foundFile */
 					$foundFilesList[] = $foundFile->getPathname();
 				}
 
 				natsort($foundFilesList);
 
+				/** @var string $foundFilePathname */
 				foreach ($foundFilesList as $foundFilePathname) {
 					$normalizedFiles[] = $foundFilePathname;
 				}
 
 			} else {
-				$this->checkFileExists($file, $sourceDir);
-				$normalizedFiles[] = $file;
+				if (is_string($file)) {
+					$this->checkFileExists($file, $sourceDir);
+					$normalizedFiles[] = $file;
+				}
 			}
 		}
 
@@ -238,7 +245,7 @@ class Extension extends \Nette\DI\CompilerExtension
 		if (!$this->fileExists($file)) {
 			$tmp = rtrim($sourceDir, '/\\') . DIRECTORY_SEPARATOR . $file;
 			if (!$this->fileExists($tmp)) {
-				throw new \WebLoader\FileNotFoundException(sprintf("Neither '%s' or '%s' was found", $file, $tmp));
+				throw new FileNotFoundException(sprintf("Neither '%s' or '%s' was found", $file, $tmp));
 			}
 		}
 	}

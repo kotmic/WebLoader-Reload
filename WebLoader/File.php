@@ -7,19 +7,13 @@ namespace WebLoader;
 class File
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $file;
 
-	/**
-	 * @var int
-	 */
-	protected $lastModified = null;
+	/** @var int|null */
+	protected $lastModified;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $sourceFiles;
 
 
@@ -27,8 +21,7 @@ class File
 		string $file,
 		?int $lastModified,
 		array $sourceFiles
-	)
-	{
+	) {
 		$this->file = $file;
 		$this->lastModified = $lastModified;
 		$this->sourceFiles = $sourceFiles;
@@ -51,5 +44,4 @@ class File
 	{
 		return $this->sourceFiles;
 	}
-
 }
