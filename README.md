@@ -1,7 +1,12 @@
-﻿WebLoader [![Build Status](https://secure.travis-ci.org/janmarek/WebLoader.png?branch=master)](http://travis-ci.org/janmarek/WebLoader)
+﻿WebLoader-Reload
 =======================
 
 Component for CSS and JS files loading
+
+WebLoader-Reload is an updated WebLoader package by @janmarek for the latest version of Nette (Nette-3.0).
+Also contains some bug fixes.
+
+Big thanks to @Gappa, which updated the package for Nette-3.0.
 
 Author: Jan Marek
 Licence: MIT
