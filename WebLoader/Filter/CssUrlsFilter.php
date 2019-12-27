@@ -24,7 +24,13 @@ class CssUrlsFilter
 	private $docRoot;
 
 
-	public function __construct(string $docRoot, string $basePath = '/')
+    /**
+     * CssUrlsFilter constructor.
+     * @param string $docRoot
+     * @param string $basePath
+     * @throws InvalidArgumentException
+     */
+    public function __construct(string $docRoot, string $basePath = '/')
 	{
 		$this->docRoot = Path::normalize($docRoot);
 
@@ -51,11 +57,11 @@ class CssUrlsFilter
 
 		$cssFile = Path::normalize($cssFile);
 
-		$pathInfo = pathinfo($_SERVER['PHP_SELF']); 
+		$pathInfo = pathinfo($_SERVER['PHP_SELF']);
 
 		// inside document root
 		if (strncmp($cssFile, $this->docRoot, strlen($this->docRoot)) === 0) {
-			$path = $this->basePath . substr(dirname($cssFile), strlen($this->docRoot)) . DIRECTORY_SEPARATOR . $url;
+			$path = $pathInfo['dirname'] ."/". $this->basePath . substr(dirname($cssFile), strlen($this->docRoot)) . DIRECTORY_SEPARATOR . $url;
 		} else {
 			// outside document root we don't know
 			$path = $pathInfo['dirname'] ."/". $this->basePath . dirname($cssFile). DIRECTORY_SEPARATOR . $url;

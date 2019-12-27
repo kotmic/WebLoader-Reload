@@ -33,7 +33,7 @@ class Extension extends CompilerExtension
 			'jsDefaults' => Expect::structure([
 				'checkLastModified' => Expect::bool(true),
 				'debug' => Expect::bool(false),
-				'sourceDir' => Expect::string('%wwwDir%/js'),
+				'sourceDir' => Expect::string('%wwwDir%'),
 				'tempDir' => Expect::string('%wwwDir%/' . self::DEFAULT_TEMP_PATH),
 				'tempPath' => Expect::string(self::DEFAULT_TEMP_PATH),
 				'files' => Expect::array(),
@@ -51,7 +51,7 @@ class Extension extends CompilerExtension
 			'cssDefaults' => Expect::structure([
 				'checkLastModified' => Expect::bool(true),
 				'debug' => Expect::bool(false),
-				'sourceDir' => Expect::string('%wwwDir%/css')->dynamic(),
+				'sourceDir' => Expect::string('%wwwDir%')->dynamic(),
 				'tempDir' => Expect::string('%wwwDir%/' . self::DEFAULT_TEMP_PATH),
 				'tempPath' => Expect::string(self::DEFAULT_TEMP_PATH),
 				'files' => Expect::array(),
@@ -73,7 +73,10 @@ class Extension extends CompilerExtension
 	}
 
 
-	public function loadConfiguration(): void
+    /**
+     * @throws CompilationException
+     */
+    public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -205,7 +208,13 @@ class Extension extends CompilerExtension
 	}
 
 
-	private function findFiles(array $filesConfig, string $sourceDir): array
+    /**
+     * @param array $filesConfig
+     * @param string $sourceDir
+     * @return array
+     * @throws FileNotFoundException
+     */
+    private function findFiles(array $filesConfig, string $sourceDir): array
 	{
 		$normalizedFiles = [];
 
@@ -250,7 +259,12 @@ class Extension extends CompilerExtension
 	}
 
 
-	protected function checkFileExists(string $file, string $sourceDir): void
+    /**
+     * @param string $file
+     * @param string $sourceDir
+     * @throws FileNotFoundException
+     */
+    protected function checkFileExists(string $file, string $sourceDir): void
 	{
 		if (!$this->fileExists($file)) {
 			$tmp = rtrim($sourceDir, '/\\') . DIRECTORY_SEPARATOR . $file;
