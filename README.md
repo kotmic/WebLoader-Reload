@@ -101,13 +101,13 @@ Usage in `app/presenters/BasePresenter.php`:
 	/** @var \WebLoader\Nette\LoaderFactory @inject */
 	public $webLoader;
 
-	/** @return CssLoader */
+	/** @return \WebLoader\Nette\CssLoader */
 	protected function createComponentCss()
 	{
 		return $this->webLoader->createCssLoader('default');
 	}
 
-	/** @return JavaScriptLoader */
+	/** @return \WebLoader\Nette\JavaScriptLoader */
 	protected function createComponentJs()
 	{
 		return $this->webLoader->createJavaScriptLoader('default');
