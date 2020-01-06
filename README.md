@@ -3,7 +3,7 @@
 
 Component for CSS and JS files loading
 
-WebLoader-Reload is an updated WebLoader package by @janmarek for the latest version of Nette (Nette-3.0).
+WebLoader-Reload is an updated WebLoader package by [janmarek](https://github.com/janmarek) for the latest version of Nette (Nette-3.0).
 Also contains some bug fixes.
 
 Big thanks to [Gappa](https://github.com/Gappa), who updated the package for Nette-3.0.
