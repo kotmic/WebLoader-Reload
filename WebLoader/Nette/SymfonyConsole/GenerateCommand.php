@@ -39,7 +39,7 @@ class GenerateCommand extends \Symfony\Component\Console\Command\Command
 	}
 
 
-	protected function execute(InputInterface $input, OutputInterface $output): void
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$force = $input->getOption('force');
 
@@ -47,7 +47,7 @@ class GenerateCommand extends \Symfony\Component\Console\Command\Command
 		foreach ($this->compilers as $compiler) {
 			$files = $compiler->generate(!$force);
 			foreach ($files as $file) {
-				$output->writeln($file->file);
+				$output->writeln($file->getFile());
 				$nofiles = false;
 			}
 		}
@@ -55,5 +55,7 @@ class GenerateCommand extends \Symfony\Component\Console\Command\Command
 		if ($nofiles) {
 			$output->writeln('No files generated.');
 		}
+
+		return 0;
 	}
 }
