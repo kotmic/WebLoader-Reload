@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace WebLoader\Filter;
 
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 /**
  * Scss CSS filter
