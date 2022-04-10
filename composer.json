@@ -1,5 +1,5 @@
 {
-	"name": "bicisteadm/webloader-reload",
+	"name": "kotmic/webloader-reload",
 	"description": "Tool for loading or deploying CSS and JS files into web pages",
 	"keywords": ["webloader", "css", "javascript", "assets", "nette", "reload"],
 	"homepage": "http://addons.nette.org/cs/webloader",
